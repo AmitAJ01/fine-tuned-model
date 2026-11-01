@@ -31,10 +31,10 @@ flowchart TD
         H --> I["Best Adapter Checkpoint\n(models/finetuned_v2/adapter/best)"]
     end
 
-    subgraph InferenceServing ["Production Serving & Verification"]
+    subgraph InferenceServing ["Inference Serving & Verification"]
         I --> J["FastAPI Backend\n(/api/v1/incident/diagnose)"]
-        J --> K["Structured RFC 8259 JSON\n(IncidentReportPayload)"]
         K --> L["Next.js 14 Interactive Dashboard\n(CUDA Synchronized Telemetry)"]
+        J --> K["Structured RFC 8259 JSON\n(IncidentReportPayload)"]
     end
 
     subgraph EvaluationAudit ["Controlled Statistical Evaluation"]
@@ -52,10 +52,11 @@ flowchart TD
 
 - **Strict Controlled Experimentation:** Direct head-to-head comparison between base foundation weights and fine-tuned adapter weights under identical prompt hashes, 162 held-out test cases, and greedy decoding.
 - **Completion-Only Loss Masking:** Tensors format prompt tokens with `label = -100`, eliminating gradient dilution and forcing backpropagation exclusively through the model's diagnostic response.
-- **Hardware-Aware 4-Bit QLoRA:** Fits full parameter adaptation (18.46M trainable parameters across all 7 linear projections) within a consumer **6 GB GPU VRAM footprint** (peak VRAM: 3.85 GB during training).
+- **Hardware-Aware 4-Bit QLoRA:** Fits full parameter adaptation (18.46M trainable parameters across all 7 linear projections) within a consumer **6 GB GPU VRAM footprint** (peak VRAM: 4,583 MB during training).
 - **FastAPI Diagnostic Microservice:** Implements robust endpoints (`/health`, `/hardware`, `/evaluation/comparison`, `/incident/diagnose`) with structured JSON parsing diagnostics and zero dummy fallback fabrication.
-- **Next.js 14 Enterprise Dashboard:** Real-time triage console featuring incident scenario presets, side-by-side model comparison, and interactive benchmark visualizations.
-- **Mathematical Significance Verification:** Exact two-sided McNemar binomial tests ($p < 0.0004$) and paired percentile bootstrap confidence intervals ($B = 10,000$ iterations) verifying reproducible domain gains.
+- **Next.js 14 Interactive Dashboard:** Real-time triage console featuring incident scenario presets, side-by-side model comparison, and interactive benchmark visualizations.
+- **Mathematical Significance Verification:** Exact two-sided McNemar binomial tests ($p = 0.000264$) and paired percentile bootstrap confidence intervals ($B = 10,000$ iterations) verifying reproducible domain gains.
+- **Research Prototype Designation:** Formally scoped and validated as a **Human-Reviewed Incident Diagnostic Copilot / Research Prototype** for incident triage assistance (not an autonomous infrastructure mutator).
 
 ---
 
@@ -99,16 +100,22 @@ Tokens in the system prompt and user telemetry have `labels[i] = -100`, ensuring
 | Parameter | Value | Architectural Justification |
 | :--- | :--- | :--- |
 | **Base Architecture** | `Qwen2.5-Coder-1.5B-Instruct` | 28 transformer layers, 16 attention heads, 1.54B parameters |
+| **Base Model Revision** | `2e1fd397ee46e1388853d2af2c993145b0f1098a` | Pinned immutable Git commit hash on Hugging Face |
 | **Quantization** | 4-bit NF4 (`bitsandbytes`) | Quantizes base linear layers to 4-bit; double quantization enabled |
 | **Compute Precision** | `torch.bfloat16` | Preserves dynamic range and numerical stability during backprop |
 | **LoRA Rank ($r$)** | `16` | Low-rank projection dimension |
 | **LoRA Alpha ($\alpha$)** | `32` | Scaling factor ($\alpha / r = 2.0$) |
 | **Target Modules** | All 7 Linear Projections | `q_proj`, `k_proj`, `v_proj`, `o_proj`, `gate_proj`, `up_proj`, `down_proj` |
-| **Trainable Parameters** | **18,464,768** (1.18%) | Total model parameters: 1,562,179,072 |
-| **Sequence Length** | 3,072 tokens | Captures multi-service pod logs and Prometheus metrics |
-| **Batch Size & Accumulation**| $B=1$, Steps=8 (Effective $B=8$) | Fits within 6 GB VRAM with gradient checkpointing enabled |
-| **Optimizer & Learning Rate**| `paged_adamw_8bit`, $2 \times 10^{-4}$ | Cosine schedule with 5% warmup |
-| **Peak Training VRAM** | **3,946 MB** (3.85 GB) | Safe operation within 6.0 GB laptop GPU budget |
+| **Trainable Parameters** | **18,464,768** (1.182%) | 18.46M trainable adapter parameters out of 1,562,179,072 total |
+| **Loss Masking** | Completion-Only Masking | Prompt tokens assigned `label = -100`; loss computed on response only |
+| **Sequence Length** | 3,072 tokens | Captures multi-service pod logs, call traces, and Prometheus metrics |
+| **Batch Size & Accumulation**| $B=1$, Steps=16 (**Effective $B=16$**) | Fits within 6 GB VRAM with gradient checkpointing enabled |
+| **Epochs & Optimizer Steps** | **1 Epoch**, **33 Optimizer Steps** | 536 training examples / 16 effective batch size = 33 update steps |
+| **Optimizer & Schedule** | `paged_adamw_8bit`, $\text{LR} = 2 \times 10^{-4}$ | Cosine decay schedule with 5% warmup |
+| **Training Duration** | **2,606.0s (~43m 26s)** | Measured on NVIDIA GeForce RTX 3050 Laptop GPU (6.0 GB VRAM) |
+| **Loss Trajectory** | Train: 2.0710 $\to$ **0.0624**; Val: **0.08941** | Evaluated every 11 steps (Val loss: 0.3301 $\to$ 0.1120 $\to$ 0.08941) |
+| **Peak Training VRAM** | **4,583 MB** (~4.48 GB, 74.6% capacity) | Safe operation within 6.0 GB laptop GPU budget |
+| **Adapter Checkpoint Size** | **70.49 MB** (73,912,488 bytes) | Standalone `adapter_model.safetensors` weight file |
 
 ---
 
@@ -126,9 +133,13 @@ Both configurations were evaluated head-to-head across the **exact same 162 held
 | **Kubernetes Recall** | **4.35%** (2/46) | **89.13%** (41/46) | **+84.78 pp** | **+1,949%** | Cured baseline's collapse of K8s faults into Application |
 | **Network Precision** | **23.68%** | **88.89%** | **+65.21 pp** | **+275%** | F1 increased from 0.3214 to 0.5926 |
 | **Application Precision** | **48.19%** | **74.51%** | **+26.32 pp** | **+54.6%** | F1 increased from 0.6299 to 0.8000 |
-| **JSON Validity Rate (384 tokens)** | **99.38%** (161/162) | **95.06%** (154/162) | **-4.32 pp** | -4.35% | 8 mid-string truncations due to rich technical responses |
-| **JSON Validity Rate (768 tokens)** | **99.38%** | **100.0%** (8/8) | **+0.62 pp** | +0.62% | Diagnostic rerun confirms zero syntax errors with token headroom |
+| **JSON Validity Rate (Standard 384 tokens)** | **99.38%** (161/162) | **95.06%** (154/162) | **-4.32 pp** | -4.35% | Full 162-test evaluation; 8 mid-string truncations on long responses |
+| **JSON Validity Rate (Diagnostic 768 tokens)** | N/A | **100.0%** (8/8) | N/A | N/A | Diagnostic rerun on the 8 truncated cases; confirms syntax with headroom |
 | **Root-Cause Exact Match** | **0.00%** (0/162) | **0.00%** (0/162) | **0.00 pp** | — | Inconclusive metric: prompt asks for prose; 87% unseen |
+
+> **Audit Notes on Evaluation Integrity:**
+> - **JSON Validity Distinction:** The primary benchmark across all $N=162$ test cases was executed at `max_new_tokens=384`. Base achieved 99.38% (161/162) and Fine-Tuned achieved 95.06% (154/162). The 8 invalid outputs were exclusively mid-string truncations where the fine-tuned model generated more comprehensive diagnostic descriptions exceeding the token budget. The 100.0% validity applies specifically to an 8-case diagnostic rerun at `max_new_tokens=768` on those 8 truncated cases (8/8 completed and parsed cleanly into RFC 8259 JSON); it was not a full 162-case re-run.
+> - **Root-Cause Exact Match Limitation:** Exact-match RCA accuracy is 0.0% for both baseline and fine-tuned models because 87.04% (141/162) of test cases involve chaos injection tags unseen during training, and the evaluation prompt requested diagnostic prose rather than exact dataset enum tags. This metric is retained as an acknowledged benchmark limitation.
 
 ### 6.2 Paired 2×2 Contingency Table (Strict Matching)
 
@@ -158,7 +169,7 @@ Tested across 10 evaluation samples on NVIDIA GeForce RTX 3050 Laptop GPU with C
 | **Fine-Tuned Merged Weights** | 2 | BF16 | **5,697.44** | **43.70** | 4,707 MB | **+1.34% (Zero Architectural Overhead)** |
 | **Fine-Tuned Unmerged LoRA** | 2 | 4-bit NF4 | 19,178.03 | 13.35 | 2,552 MB | +241.1% (PEFT dynamic branch overhead) |
 
-*Key Finding:* Pre-merging LoRA adapter weights (`model.merge_and_unload()`) completely eliminates PEFT runtime penalties, serving within **1.34% latency** of the base model while achieving **43.70 tokens/second**.
+*Key Architectural Finding:* Pre-merging LoRA adapter weights into base weights via `model.merge_and_unload()` ($W = W_0 + \Delta W$) eliminates dual-branch PEFT forward passes, serving at **physical hardware execution parity (within 1.34% latency)** with the unmodified base model (5,697 ms vs 5,622 ms at batch size 2). Fine-tuning adjusts model parameters to improve domain accuracy; it does not reduce FLOP count or accelerate inference execution over the base architecture. Conversely, serving unmerged 4-bit LoRA adapters dynamically executes dual-branch forward passes ($W_0 x + \frac{\alpha}{r} B A x$), incurring a **+241.1% latency overhead** (19,178 ms vs 5,622 ms).
 
 ---
 
@@ -175,7 +186,7 @@ Controlled benchmarking with explicit CUDA synchronization demonstrates that mer
 ![Fair Latency Comparison](experiments/reports/fair_latency_comparison.png)
 
 ### 7.3 Training Loss Trajectory
-Validation loss consistently tracked below training cross-entropy loss, demonstrating healthy generalization without overfitting across 3,072-token sequences:
+During completion-only masked training, cross-entropy loss decreased monotonically from 2.0710 (step 2) to 0.0624 (step 33), with validation loss evaluated every 11 steps at 0.3301 (step 11), 0.1120 (step 22), and 0.08941 (step 33) across 3,072-token sequences:
 
 ![Training Loss Curve](experiments/reports/training_loss_curve.png)
 
@@ -186,7 +197,7 @@ Validation loss consistently tracked below training cross-entropy loss, demonstr
 1. **System Designation:** FineTuneOps is formally designated as a **Human-Reviewed Incident Diagnostic Copilot / Research Prototype**. It assists SREs by hypothesizing failure domains and recommending diagnostic commands; it is **not** an autonomous infrastructure mutator.
 2. **Root-Cause Analysis (RCA) Exact Match (0.0%):** Cloud-OpsBench contains 44 root-cause classes in training and 12 in the test split, with only 1 overlapping class (`taint_toleration_mismatch`). 87.04% (141/162) of test cases feature unseen chaos injection tags, and the prompt schema requests natural language diagnostic text. Consequently, exact-match RCA is **inconclusive / ungrounded** under the current benchmark contract.
 3. **Absence of Golden Remediation Actions:** The Cloud-OpsBench dataset does not provide ground-truth remediation scripts. Remediation suggestions generated by the model are heuristic guidance and must be validated by an engineer.
-4. **Token Generation Headroom:** Constraining output to 384 tokens caused 8 mid-string JSON truncations. Setting the default budget to **768 tokens** resolved all truncations (100.0% validity).
+4. **Token Generation Headroom:** Constraining output to 384 tokens caused 8 mid-string JSON truncations on long diagnostic responses. A diagnostic rerun on those 8 cases with a **768-token** budget resolved all 8 truncations (100.0% valid syntax), confirming that truncations were caused by token headroom constraints rather than syntactic generation errors.
 
 ---
 
@@ -201,8 +212,8 @@ Validation loss consistently tracked below training cross-entropy loss, demonstr
 
 ### Step 1: Clone Repository & Setup Virtual Environment
 ```bash
-git clone https://github.com/username/FineTuneOps.git
-cd FineTuneOps
+git clone https://github.com/AmitAJ01/fine-tuned-model.git
+cd fine-tuned-model
 
 # Create and activate Python virtual environment
 python -m venv .venv
@@ -221,7 +232,7 @@ Copy the environment template:
 ```bash
 cp .env.example .env
 ```
-*Note on Model Weights:* Foundation weights (`Qwen/Qwen2.5-Coder-1.5B-Instruct`) are pulled on-demand from Hugging Face. The fine-tuned QLoRA adapter is configured via `FINETUNED_ADAPTER_PATH`. For details on downloading or re-training adapter weights, see [docs/ADAPTER_DISTRIBUTION.md](docs/ADAPTER_DISTRIBUTION.md).
+*Note on Model Weights:* Foundation weights (`Qwen/Qwen2.5-Coder-1.5B-Instruct`) are downloaded automatically on first run from Hugging Face. The fine-tuned QLoRA adapter weights (`adapter_model.safetensors`, 70.49 MB) are excluded from Git to prevent repository bloat. To run full fine-tuned inference, either train the adapter locally using `python ml/training/train_qlora_final.py` (~43m 26s on an RTX 3050 GPU), or download the weights once published. For full details, see [docs/ADAPTER_DISTRIBUTION.md](docs/ADAPTER_DISTRIBUTION.md). Without local adapter weights, the system runs seamlessly in baseline pretrained mode or lightweight mock mode.
 
 ### Step 3: Run Full Automated Regression Test Suite
 Verify environment, schemas, split isolation, completion masking, and API routers:

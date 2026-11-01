@@ -3,207 +3,102 @@ base_model: Qwen/Qwen2.5-Coder-1.5B-Instruct
 library_name: peft
 pipeline_tag: text-generation
 tags:
-- base_model:adapter:Qwen/Qwen2.5-Coder-1.5B-Instruct
 - lora
+- qlora
 - sft
-- transformers
-- trl
+- devops
+- incident-diagnosis
+- cloud-opsbench
+- kubernetes
+license: mit
 ---
 
-# Model Card for Model ID
+# Model Card: FineTuneOps Incident Diagnostic Adapter (`best`)
 
-<!-- Provide a quick summary of what the model is/does. -->
+This model is a PEFT QLoRA adapter fine-tuned on top of [`Qwen/Qwen2.5-Coder-1.5B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct) for automated cloud microservices and Kubernetes incident diagnosis.
 
-
+> **Distribution Notice:** The binary adapter weights (`adapter_model.safetensors`, 70.49 MB) are excluded from the Git repository to prevent repository bloat. Formal publication to the Hugging Face Model Hub is **pending release**. To reproduce or run inference with local weights, see [docs/ADAPTER_DISTRIBUTION.md](../../../docs/ADAPTER_DISTRIBUTION.md) or train locally via `python ml/training/train_qlora_final.py`.
 
 ## Model Details
 
-### Model Description
-
-<!-- Provide a longer summary of what this model is. -->
-
-
-
-- **Developed by:** [More Information Needed]
-- **Funded by [optional]:** [More Information Needed]
-- **Shared by [optional]:** [More Information Needed]
-- **Model type:** [More Information Needed]
-- **Language(s) (NLP):** [More Information Needed]
-- **License:** [More Information Needed]
-- **Finetuned from model [optional]:** [More Information Needed]
-
-### Model Sources [optional]
-
-<!-- Provide the basic links for the model. -->
-
-- **Repository:** [More Information Needed]
-- **Paper [optional]:** [More Information Needed]
-- **Demo [optional]:** [More Information Needed]
-
-## Uses
-
-<!-- Address questions around how the model is intended to be used, including the foreseeable users of the model and those affected by the model. -->
-
-### Direct Use
-
-<!-- This section is for the model use without fine-tuning or plugging into a larger ecosystem/app. -->
-
-[More Information Needed]
-
-### Downstream Use [optional]
-
-<!-- This section is for the model use when fine-tuned for a task, or when plugged into a larger ecosystem/app -->
-
-[More Information Needed]
-
-### Out-of-Scope Use
-
-<!-- This section addresses misuse, malicious use, and uses that the model will not work well for. -->
-
-[More Information Needed]
-
-## Bias, Risks, and Limitations
-
-<!-- This section is meant to convey both technical and sociotechnical limitations. -->
-
-[More Information Needed]
-
-### Recommendations
-
-<!-- This section is meant to convey recommendations with respect to the bias, risk, and technical limitations. -->
-
-Users (both direct and downstream) should be made aware of the risks, biases and limitations of the model. More information needed for further recommendations.
-
-## How to Get Started with the Model
-
-Use the code below to get started with the model.
-
-[More Information Needed]
-
-## Training Details
-
-### Training Data
-
-<!-- This should link to a Dataset Card, perhaps with a short stub of information on what the training data is all about as well as documentation related to data pre-processing or additional filtering. -->
-
-[More Information Needed]
-
-### Training Procedure
-
-<!-- This relates heavily to the Technical Specifications. Content here should link to that section when it is relevant to the training procedure. -->
-
-#### Preprocessing [optional]
-
-[More Information Needed]
-
-
-#### Training Hyperparameters
-
-- **Training regime:** [More Information Needed] <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
-
-#### Speeds, Sizes, Times [optional]
-
-<!-- This section provides information about throughput, start/end time, checkpoint size if relevant, etc. -->
-
-[More Information Needed]
-
-## Evaluation
-
-<!-- This section describes the evaluation protocols and provides the results. -->
-
-### Testing Data, Factors & Metrics
-
-#### Testing Data
-
-<!-- This should link to a Dataset Card if possible. -->
-
-[More Information Needed]
-
-#### Factors
-
-<!-- These are the things the evaluation is disaggregating by, e.g., subpopulations or domains. -->
-
-[More Information Needed]
-
-#### Metrics
-
-<!-- These are the evaluation metrics being used, ideally with a description of why. -->
-
-[More Information Needed]
-
-### Results
-
-[More Information Needed]
-
-#### Summary
-
-
-
-## Model Examination [optional]
-
-<!-- Relevant interpretability work for the model goes here -->
-
-[More Information Needed]
-
-## Environmental Impact
-
-<!-- Total emissions (in grams of CO2eq) and additional considerations, such as electricity usage, go here. Edit the suggested text below accordingly -->
-
-Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
-
-- **Hardware Type:** [More Information Needed]
-- **Hours used:** [More Information Needed]
-- **Cloud Provider:** [More Information Needed]
-- **Compute Region:** [More Information Needed]
-- **Carbon Emitted:** [More Information Needed]
-
-## Technical Specifications [optional]
-
-### Model Architecture and Objective
-
-[More Information Needed]
-
-### Compute Infrastructure
-
-[More Information Needed]
-
-#### Hardware
-
-[More Information Needed]
-
-#### Software
-
-[More Information Needed]
-
-## Citation [optional]
-
-<!-- If there is a paper or blog post introducing the model, the APA and Bibtex information for that should go in this section. -->
-
-**BibTeX:**
-
-[More Information Needed]
-
-**APA:**
-
-[More Information Needed]
-
-## Glossary [optional]
-
-<!-- If relevant, include terms and calculations in this section that can help readers understand the model or model card. -->
-
-[More Information Needed]
-
-## More Information [optional]
-
-[More Information Needed]
-
-## Model Card Authors [optional]
-
-[More Information Needed]
-
-## Model Card Contact
-
-[More Information Needed]
-### Framework versions
-
-- PEFT 0.21.2
+- **Base Model:** `Qwen/Qwen2.5-Coder-1.5B-Instruct` (Git revision: `2e1fd397ee46e1388853d2af2c993145b0f1098a`)
+- **Adapter Type:** Low-Rank Adaptation (LoRA) via PEFT
+- **Quantization:** 4-bit NormalFloat (NF4) with Double Quantization (`bitsandbytes`)
+- **Compute Precision:** `torch.bfloat16`
+- **LoRA Configuration:**
+  - Rank ($r$): 16
+  - Alpha ($\alpha$): 32
+  - Target Modules: All 7 linear projection layers (`q_proj`, `k_proj`, `v_proj`, `o_proj`, `gate_proj`, `up_proj`, `down_proj`)
+  - Trainable Parameters: 18,464,768 (1.182% of 1,562,179,072 total parameters)
+- **Dataset:** [Cloud-OpsBench v1.0.0](https://github.com/LLM4Ops/Cloud-OpsBench) (MIT License, 754 validated incident cases across Google Online Boutique and TrainTicket)
+- **Training Strategy:** Completion-only loss masking (system prompt and user telemetry tokens assigned `label = -100`)
+- **Effective Batch Size:** 16 ($B=1$ micro-batch $\times$ 16 gradient accumulation steps)
+- **Training Steps:** 33 optimizer steps (1 epoch, evaluated every 11 steps)
+- **Training Hardware:** NVIDIA GeForce RTX 3050 Laptop GPU (6.0 GB VRAM)
+- **Training Duration:** 2,606.0 seconds (~43 minutes 26 seconds)
+- **Loss Progression:** Train Loss: 2.0710 $\to$ 0.0624; Validation Loss: 0.3301 $\to$ 0.1120 $\to$ 0.08941
+- **System Designation:** Human-Reviewed Incident Diagnostic Copilot / Research Prototype
+
+## Intended Use
+
+FineTuneOps is designed to assist Site Reliability Engineers (SREs) and DevOps engineers in diagnosing cloud infrastructure incidents by:
+1. Classifying the failure domain into standard taxonomy categories (`Application`, `Kubernetes`, `Network`, `Database`, etc.).
+2. Generating structured incident triage reports conforming to RFC 8259 JSON schema (`IncidentReportPayload`).
+3. Recommending diagnostic commands (`kubectl get pods`, `kubectl describe`, error log filters) for human verification.
+
+**Out-of-Scope:** This model is not an autonomous infrastructure remediation agent and must not execute mutative actions (`kubectl delete`, `kubectl apply`) without human engineer review.
+
+## Evaluation Results (Controlled 162-Case Held-Out Test Set)
+
+Evaluated head-to-head against the unmodified base model on the exact same 162 held-out test cases (`ml/data/splits_final/test.jsonl`) under greedy decoding (`temperature = 0.0`):
+
+| Metric | Pretrained Base | Fine-Tuned (Completion QLoRA) | Delta | Statistical Significance |
+| :--- | :---: | :---: | :---: | :--- |
+| **Fault Category Accuracy (Strict)** | 45.06% (73/162) | **62.96%** (102/162) | **+17.90 pp** (+39.7%) | Exact McNemar $p = 0.000264$ (95% CI: $[+8.64\text{ pp}, +26.54\text{ pp}]$) |
+| **Fault Category Macro F1** | 0.3578 | **0.5307** | **+0.1729** (+48.3%) | Broad gains across minority incident classes |
+| **Kubernetes Recall** | 4.35% (2/46) | **89.13%** (41/46) | **+84.78 pp** | Resolves baseline failure mode collapsing K8s faults into Application |
+| **Network Precision** | 23.68% | **88.89%** | **+65.21 pp** | F1 improved from 0.3214 to 0.5926 |
+| **Application Precision** | 48.19% | **74.51%** | **+26.32 pp** | F1 improved from 0.6299 to 0.8000 |
+| **JSON Validity (Standard 384 tokens)** | 99.38% (161/162) | 95.06% (154/162) | -4.32 pp | 8 mid-string truncations on long diagnostic responses |
+| **JSON Validity (Diagnostic 768 tokens)** | N/A | **100.0%** (8/8) | N/A | Diagnostic rerun confirms zero syntax errors with token headroom |
+| **Root-Cause Exact Match** | 0.00% (0/162) | 0.00% (0/162) | 0.00 pp | Inconclusive metric: prompt requests prose; 87% unseen chaos tags |
+
+## How to Load and Use
+
+When adapter weights are present in `models/finetuned_v2/adapter/best/`:
+
+```python
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from peft import PeftModel
+
+base_model_name = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+adapter_path = "models/finetuned_v2/adapter/best"
+
+# 1. Load Tokenizer
+tokenizer = AutoTokenizer.from_pretrained(adapter_path)
+
+# 2. Load Base Model in 4-bit NF4
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
+base_model = AutoModelForCausalLM.from_pretrained(
+    base_model_name,
+    quantization_config=bnb_config,
+    device_map="auto",
+    torch_dtype=torch.bfloat16,
+)
+
+# 3. Attach Fine-Tuned LoRA Adapter
+model = PeftModel.from_pretrained(base_model, adapter_path)
+model.eval()
+```
+
+## Citation & Attribution
+
+- **Base Model:** Alibaba Cloud `Qwen/Qwen2.5-Coder-1.5B-Instruct` (Apache 2.0)
+- **Dataset:** LLM4Ops `Cloud-OpsBench` (MIT License)
+- **Fine-Tuning Platform:** FineTuneOps (MIT License)

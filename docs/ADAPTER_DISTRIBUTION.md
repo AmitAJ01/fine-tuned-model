@@ -52,26 +52,31 @@ export FINETUNED_ADAPTER_PATH="/path/to/custom/adapter_checkpoint"
 
 ## 4. Setup Instructions for New Users
 
-### Option A: Download Published Adapter (Pending Release)
-Once published to Hugging Face Model Hub, download the adapter weights directly:
+### Option A: Download Published Adapter (Status: Pending Release)
+
+> **Notice:** Adapter weights have **not** been uploaded to the Hugging Face Model Hub. Publication is pending formal maintainer release. Do not execute the placeholder command below until an official repository identifier is announced.
+
+When published, the weights can be retrieved via the Hugging Face CLI:
 ```bash
 # Install Hugging Face Hub CLI
 pip install huggingface_hub
 
-# Download adapter weights into the expected directory:
-huggingface-cli download <HF_ORG_OR_USER>/finetuneops-qwen2.5-1.5b-adapter \
-  adapter_model.safetensors \
-  --local-dir models/finetuned_v2/adapter/best/
+# Placeholder command (run only after maintainer publication):
+# huggingface-cli download <PENDING_RELEASE_REPO_ID>/adapter_model.safetensors \
+#   --local-dir models/finetuned_v2/adapter/best/
 ```
 
-### Option B: Local Training Reproduction (5 Minutes on GPU)
-If you have an NVIDIA GPU ($\ge 6\text{GB}$ VRAM), you can re-train the adapter locally from the verified dataset:
+### Option B: Local Training Reproduction (~43 Minutes on GPU)
+If you have an NVIDIA GPU ($\ge 6.0\text{ GB}$ VRAM, such as an RTX 3050 Laptop GPU or higher), you can re-train the adapter locally from the verified dataset splits in `ml/data/splits_final/`:
 ```bash
-# Run completion-only masked QLoRA fine-tuning:
+# Run completion-only masked QLoRA fine-tuning (measured duration: ~43m 26s on RTX 3050):
 python ml/training/train_qlora_final.py
 
 # The trained adapter will automatically be saved to models/finetuned_v2/adapter/best/
 ```
+
+> **Reproducibility & Hardware Floating-Point Variance Note:**
+> All training random seeds are explicitly pinned (`seed: 2026` across Python, NumPy, and PyTorch CUDA). However, because low-level cuDNN convolution/GEMM kernels, atomic floating-point summation order in bfloat16, and CUDA driver architectures introduce slight non-deterministic floating-point variance across different hardware platforms, independent reproduction runs may produce marginally different loss values and weight tensors ($< 0.1\%$ delta), while preserving statistically comparable diagnostic performance.
 
 ### Option C: Run Without Local Adapter (Baseline or Simulation Mode)
 You do not need the fine-tuned adapter to test the application:
@@ -98,9 +103,9 @@ Instead, it returns a structured diagnostic error conforming to RFC 8259:
 
 ---
 
-## 6. Maintainer Step: Publishing the Adapter to Hugging Face Hub
+## 6. Maintainer Reference: Future Publishing to Hugging Face Hub
 
-> **Notice:** This step is to be executed by the repository maintainer upon public release. Do not execute this during local evaluation.
+> **Important Release Notice:** This section provides future procedure for the maintainer upon formal release. Adapter weights have **not** been published to Hugging Face during evaluation, and no Hugging Face authentication or upload is performed by this repository.
 
 1. Install Hugging Face CLI and log in:
    ```bash
