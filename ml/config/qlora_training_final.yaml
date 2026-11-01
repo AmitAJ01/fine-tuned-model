@@ -1,0 +1,81 @@
+# ==============================================================================
+# FineTuneOps - Final Controlled QLoRA SFT Configuration (Task 7)
+# Completion-Only Loss Masking with assistant_only_loss=True
+# ==============================================================================
+
+model_name_or_path: "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+base_model_revision: "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+output_dir: "models/finetuned_v2/adapter"
+best_model_dir: "models/finetuned_v2/adapter/best"
+
+# 4-bit NormalFloat (NF4) Quantization Settings
+quantization:
+  load_in_4bit: true
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_compute_dtype: "bfloat16"
+  bnb_4bit_use_double_quant: true
+
+# PEFT LoRA Configuration
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  bias: "none"
+  task_type: "CAUSAL_LM"
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+
+# Training Hyperparameters
+training:
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 16 # Effective batch size = 16
+  learning_rate: 2.0e-4
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+  num_train_epochs: 1
+  max_steps: -1
+  logging_steps: 2
+  eval_strategy: "steps"
+  eval_steps: 11
+  save_strategy: "steps"
+  save_steps: 11
+  save_total_limit: 3
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+  greater_is_better: false
+  fp16: false
+  bf16: true
+  gradient_checkpointing: true
+  optim: "paged_adamw_8bit"
+  max_grad_norm: 0.3
+  seed: 2026
+  dataloader_num_workers: 0
+
+# SFT Dataset Settings (Fresh Group-Based Split)
+dataset:
+  train_split_path: "ml/data/splits_final/train.jsonl"
+  val_split_path: "ml/data/splits_final/val.jsonl"
+  test_split_path: "ml/data/splits_final/test.jsonl"
+  max_seq_length: 3072
+  packing: false
+  assistant_only_loss: true
+
+# Experiment Monitoring & Artifacts
+monitoring:
+  metrics_output_path: "experiments/final_run/training_metrics.json"
+  report_output_path: "experiments/reports/final_training_audit.md"
+  loss_curve_output_path: "experiments/final_run/training_loss_curve.png"
+
+# Experiment Tracking
+mlflow:
+  enabled: false
+  experiment_name: "finetuneops-devops-diagnosis-final"
+  run_name: "qwen2.5-coder-1.5b-qlora-sft-masked"

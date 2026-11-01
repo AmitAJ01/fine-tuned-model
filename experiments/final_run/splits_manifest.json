@@ -1,0 +1,59 @@
+{
+  "dataset_name": "Cloud-OpsBench Final Controlled Split",
+  "split_generation_seed": 2026,
+  "split_proportions": {
+    "train_ratio_target": 0.7,
+    "val_ratio_target": 0.1,
+    "test_ratio_target": 0.2
+  },
+  "total_records": 754,
+  "splits": {
+    "train": {
+      "path": "ml\\data\\splits_final\\train.jsonl",
+      "count": 536,
+      "percentage": 71.09,
+      "sha256": "1ceee3996dc16b793ebadf56fa324761dd723963d706741c70970b71f308bb80",
+      "category_distribution": {
+        "Application": 125,
+        "Database": 75,
+        "Infrastructure": 86,
+        "Kubernetes / Container Orchestration": 183,
+        "Network": 67
+      },
+      "scenario_group_count": 55
+    },
+    "val": {
+      "path": "ml\\data\\splits_final\\val.jsonl",
+      "count": 56,
+      "percentage": 7.43,
+      "sha256": "3460d5a6df2618dd6d933954770c6fd54bc3e5f18eb07d09f9ee872cffec5ca7",
+      "category_distribution": {
+        "Application": 8,
+        "Database": 7,
+        "Infrastructure": 4,
+        "Kubernetes / Container Orchestration": 37
+      },
+      "scenario_group_count": 6
+    },
+    "test": {
+      "path": "ml\\data\\splits_final\\test.jsonl",
+      "count": 162,
+      "percentage": 21.49,
+      "sha256": "757858cf28a816192a1bbbb8bb499a54f5a6ccfc0e67a78b77f65a6515a4c861",
+      "category_distribution": {
+        "Application": 44,
+        "Database": 29,
+        "Infrastructure": 25,
+        "Kubernetes / Container Orchestration": 46,
+        "Network": 18
+      },
+      "scenario_group_count": 13
+    }
+  },
+  "clean_room_audit": {
+    "scenario_leakage_detected": false,
+    "id_overlap_detected": false,
+    "target_leakage_detected": false,
+    "zero_leakage_verified": true
+  }
+}

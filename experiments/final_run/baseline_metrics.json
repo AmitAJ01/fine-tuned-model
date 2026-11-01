@@ -1,0 +1,20 @@
+{
+  "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "evaluation_timestamp": "2026-10-31T19:20:21.702992+00:00",
+  "total_evaluated_samples": 162,
+  "metrics": {
+    "fault_taxonomy_accuracy": 0.4506,
+    "root_cause_exact_match": 0.0,
+    "root_cause_normalized_acc": 0.0,
+    "root_cause_semantic_score": 0.0148,
+    "json_validity_rate": 0.9938,
+    "schema_compliance_rate": 0.9938,
+    "mean_grounding_score_heuristic": 0.9901,
+    "latency": {
+      "mean_ms": 5363.69,
+      "median_ms": 5270.59,
+      "p95_ms": 6877.39
+    }
+  },
+  "total_wall_time_seconds": 869.48
+}

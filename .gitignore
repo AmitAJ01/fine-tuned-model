@@ -1,0 +1,97 @@
+# ==============================================================================
+# FineTuneOps — Git Ignore Configuration
+# ==============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments & Secrets
+.env
+.env.local
+.env.*.local
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Heavy Model Weights & Training Checkpoints (>50MB)
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+*.h5
+checkpoint-*
+**/checkpoint-*/
+**/optimizer.pt
+**/scheduler.pt
+**/training_args.bin
+
+# Model directories (Keep configs and tokenizers, exclude heavy tensors)
+models/baseline/*
+!models/baseline/.gitkeep
+models/finetuned/*
+!models/finetuned/.gitkeep
+models/finetuned_v2/adapter/checkpoint-*/
+models/finetuned_v2/adapter/best/*.safetensors
+models/finetuned_v2/adapter/best/*.bin
+models/finetuned_v2/adapter/best/*.pt
+
+# Experiment Tracking (W&B / MLflow)
+wandb/
+mlruns/
+.mlflow/
+
+# Raw Datasets & Temporary Caches (Downloadable via scripts/download_cloud_ops_bench.py)
+ml/data/raw/*
+!ml/data/raw/.gitkeep
+ml/data/raw/cloud_ops_bench/
+ml/data/processed/incidents.jsonl
+ml/data/splits/*
+!ml/data/splits/.gitkeep
+
+# Evaluation Results (Historical results ignored, final_run and reports preserved)
+experiments/results/*
+!experiments/results/.gitkeep
+!experiments/results/evaluation_summary.json
+!experiments/results/comparison_metrics.json
+
+# Node.js / Frontend
+node_modules/
+.next/
+out/
+build/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Testing & Linting
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary & Local Logs
+*.log
+scratch/
+tmp/
+.cache/
+.matplotlib/
+**/.matplotlib/

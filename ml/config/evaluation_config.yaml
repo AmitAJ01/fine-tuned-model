@@ -1,0 +1,46 @@
+# ==============================================================================
+# FineTuneOps - Evaluation Configuration
+# Baseline vs. Fine-Tuned Model Comparison Protocol
+# ==============================================================================
+
+evaluation_run_id: "eval-baseline-vs-finetuned"
+description: "Strict head-to-head comparison on held-out test split under identical generation settings"
+
+dataset:
+  test_split_path: "ml/data/splits/test.jsonl"
+  sample_limit: null # Set to integer to test on a subset, null for complete split
+
+models:
+  baseline:
+    name: "baseline_qwen2.5_coder_1.5b"
+    model_name_or_path: "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+    adapter_path: null
+    description: "Original pretrained instruction-tuned Qwen 2.5 Coder 1.5B without domain adaptation"
+
+  finetuned:
+    name: "finetuned_qwen2.5_coder_1.5b_qlora"
+    model_name_or_path: "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+    adapter_path: "models/finetuned/qwen2.5-coder-1.5b-incident-diagnosis"
+    description: "Domain-adapted model fine-tuned using QLoRA and SFT on DevOps incident dataset"
+
+generation:
+  max_new_tokens: 768
+  temperature: 0.1
+  top_p: 0.95
+  repetition_penalty: 1.05
+  do_sample: false # Deterministic generation for rigorous comparability
+
+metrics:
+  json_syntax_validity: true
+  json_schema_compliance: true
+  category_exact_match: true
+  severity_exact_match: true
+  rouge_l: true
+  bleu: true
+  latency_ms: true
+
+output:
+  results_dir: "experiments/results"
+  reports_dir: "experiments/reports"
+  export_summary_json: "experiments/results/evaluation_summary.json"
+  export_markdown_report: "experiments/reports/baseline_vs_finetuned_report.md"

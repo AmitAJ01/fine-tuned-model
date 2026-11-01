@@ -1,0 +1,94 @@
+{
+  "run_id": "eval-20261031-142943",
+  "timestamp": "2026-10-31T14:29:43.107552+00:00",
+  "dataset_name": "test.jsonl",
+  "total_samples": 1,
+  "baseline_metrics": {
+    "total_evaluated": 1,
+    "json_validity_rate": 1.0,
+    "category_accuracy": 1.0,
+    "severity_accuracy": 0.0,
+    "rouge_l_f1": 0.2581,
+    "avg_latency_ms": 1703.79,
+    "tokens_per_second": 105.65,
+    "model_name": "baseline_qwen2.5_coder_1.5b",
+    "is_fine_tuned": false
+  },
+  "finetuned_metrics": {
+    "total_evaluated": 1,
+    "json_validity_rate": 1.0,
+    "category_accuracy": 1.0,
+    "severity_accuracy": 0.0,
+    "rouge_l_f1": 0.2581,
+    "avg_latency_ms": 1.32,
+    "tokens_per_second": 136363.64,
+    "model_name": "finetuned_qwen2.5_coder_1.5b_qlora",
+    "is_fine_tuned": true
+  },
+  "sample_comparisons": [
+    {
+      "incident_id": "inc-001",
+      "input_log": "\n2026-10-31T14:10:02Z kernel: [129482.102] Out of memory: Killed process 8421 (java) total-vm:18942000kB, anon-rss:14920000kB, file-rss:0kB\n2026-10-31T14:10:03Z kubelet: container billing-service fail...",
+      "ground_truth": {
+        "incident_category": "Infrastructure",
+        "severity_level": "SEV-1",
+        "root_cause_analysis": "The billing-service JVM container exceeded the 16Gi memory limit specified in its Kubernetes resource quota, triggering the Linux kernel OOM-killer.",
+        "contributing_factors": [
+          "Unbounded in-memory queuing during end-of-month batch transaction settlement",
+          "JVM MaxRAMPercentage not set, causing Java heap to size based on node rather than cgroup limits"
+        ],
+        "recommended_debugging_steps": [
+          "kubectl describe pod billing-service-7f89c4d9b-x98pk | grep -A 5 -i oom",
+          "Inspect Prometheus container_memory_working_set_bytes metric leading up to 14:10:02Z",
+          "Capture JVM heap dump analysis using Eclipse Memory Analyzer (MAT)"
+        ],
+        "suggested_remediation_actions": [
+          "Configure JVM flags: -XX:InitialRAMPercentage=70.0 -XX:MaxRAMPercentage=75.0",
+          "Implement backpressure or offload batch records to Amazon SQS",
+          "Increase Kubernetes memory request/limit to 24Gi with horizontal pod autoscaler (HPA)"
+        ]
+      },
+      "baseline_output": {
+        "incident_category": "Infrastructure",
+        "severity_level": "SEV-2",
+        "root_cause_analysis": "Linux OOM-killer terminated the container due to memory cgroup limits exceeded.",
+        "contributing_factors": [
+          "High concurrent query traffic",
+          "Absence of JVM/Node heap limits inside cgroup"
+        ],
+        "recommended_debugging_steps": [
+          "dmesg -T | grep -i oom",
+          "kubectl top pod",
+          "Check memory leak in heap profile"
+        ],
+        "suggested_remediation_actions": [
+          "Increase pod memory request/limit",
+          "Tune application max heap size"
+        ]
+      },
+      "finetuned_output": {
+        "incident_category": "Infrastructure",
+        "severity_level": "SEV-2",
+        "root_cause_analysis": "Linux OOM-killer terminated the container due to memory cgroup limits exceeded.",
+        "contributing_factors": [
+          "High concurrent query traffic",
+          "Absence of JVM/Node heap limits inside cgroup"
+        ],
+        "recommended_debugging_steps": [
+          "dmesg -T | grep -i oom",
+          "kubectl top pod",
+          "Check memory leak in heap profile"
+        ],
+        "suggested_remediation_actions": [
+          "Increase pod memory request/limit",
+          "Tune application max heap size"
+        ]
+      },
+      "baseline_latency_ms": 1703.79,
+      "finetuned_latency_ms": 1.32,
+      "baseline_json_valid": true,
+      "finetuned_json_valid": true
+    }
+  ],
+  "verdict_summary": "Fine-Tuned model showed +0.0% category accuracy, +0.0% JSON schema adherence, and +0.0% token overlap gain compared to Baseline."
+}

@@ -1,0 +1,64 @@
+# ==============================================================================
+# FineTuneOps - Base Configuration
+# Domain-Specialized LLM Fine-Tuning Platform for DevOps Incident Diagnosis
+# ==============================================================================
+
+project:
+  name: "FineTuneOps"
+  version: "0.2.0"
+  description: "LLM Fine-Tuning Platform for Kubernetes and Microservice Incident Diagnosis (Cloud-OpsBench)"
+  author: "Senior ML & DevOps Architecture Team"
+
+# Hardware Profile & Runtime Mode
+# runtime_mode: "auto" (detects CUDA availability), "cuda", or "cpu"
+runtime:
+  mode: "auto"
+  fallback_to_cpu: true
+  device_map: "auto"
+  seed: 42
+
+# Base Model Selection
+# Recommended: Qwen/Qwen2.5-Coder-1.5B-Instruct for 6GB VRAM constraint
+# Scalable alternative for Cloud/Colab: Qwen/Qwen2.5-Coder-7B-Instruct
+model:
+  name_or_path: "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+  cloud_alternative: "Qwen/Qwen2.5-Coder-7B-Instruct"
+  tokenizer_name: "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+  torch_dtype: "bfloat16" # fallback to float16/float32 if bfloat16 not supported
+  max_seq_length: 1024
+  trust_remote_code: true
+  use_fast_tokenizer: true
+
+# Artifact Storage & Local Directories
+paths:
+  data_raw: "ml/data/raw/cloud_ops_bench"
+  data_processed: "ml/data/processed"
+  data_splits: "ml/data/splits"
+  models_baseline: "models/baseline"
+  models_finetuned: "models/finetuned"
+  experiments_results: "experiments/results"
+  experiments_reports: "experiments/reports"
+  mlflow_tracking_uri: "mlruns"
+
+# Incident Diagnosis Taxonomy (Scoped to Kubernetes & Cloud-Native Microservices)
+incident_schema:
+  categories:
+    - "Kubernetes / Container Orchestration"
+    - "Application"
+    - "Infrastructure"
+    - "Database"
+    - "Network"
+  fault_taxonomies:
+    - "Scheduling_Fault"
+    - "Runtime_Fault"
+    - "Application_Code_Defect"
+    - "Service_Routing_Fault"
+    - "Startup_Fault"
+    - "Performance_Fault"
+    - "Admission_Fault"
+    - "Infrastructure_Fault"
+  severity_levels:
+    - "Critical"
+    - "High"
+    - "Medium"
+    - "Low"

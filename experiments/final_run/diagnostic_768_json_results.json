@@ -1,0 +1,113 @@
+{
+  "timestamp": 1793479043.2977517,
+  "total_tested": 8,
+  "valid_json_count": 8,
+  "valid_json_pct": 100.0,
+  "schema_compliant_count": 8,
+  "results": [
+    {
+      "test_index": 78,
+      "test_id": "boutique/infrastructure/10",
+      "original_completion_tokens": 384,
+      "diagnostic_completion_tokens": 430,
+      "hit_max_tokens_768": false,
+      "json_valid": true,
+      "parse_error": "",
+      "schema_compliant": true,
+      "predicted_category": "Kubernetes / Container Orchestration",
+      "ground_truth_category": "Infrastructure",
+      "raw_output": "{\n  \"incident_category\": \"Kubernetes / Container Orchestration\",\n  \"severity_level\": \"Critical\",\n  \"root_cause_analysis\": \"Root cause identified as 'node_selector_mismatch' in component 'app/recommendationservice'. Classified under Scheduling_Fault within Kubernetes namespace 'boutique'. The diagnos..."
+    },
+    {
+      "test_index": 86,
+      "test_id": "boutique/infrastructure/9",
+      "original_completion_tokens": 384,
+      "diagnostic_completion_tokens": 430,
+      "hit_max_tokens_768": false,
+      "json_valid": true,
+      "parse_error": "",
+      "schema_compliant": true,
+      "predicted_category": "Kubernetes / Container Orchestration",
+      "ground_truth_category": "Infrastructure",
+      "raw_output": "{\n  \"incident_category\": \"Kubernetes / Container Orchestration\",\n  \"severity_level\": \"Critical\",\n  \"root_cause_analysis\": \"Root cause identified as 'missing_container_runtime_socket' in component 'app/contai ndr'. Classified under Startup_Fault within Kubernetes namespace 'boutique'. The diagnostic ..."
+    },
+    {
+      "test_index": 96,
+      "test_id": "boutique/infrastructure/28",
+      "original_completion_tokens": 384,
+      "diagnostic_completion_tokens": 430,
+      "hit_max_tokens_768": false,
+      "json_valid": true,
+      "parse_error": "",
+      "schema_compliant": true,
+      "predicted_category": "Kubernetes / Container Orchestration",
+      "ground_truth_category": "Infrastructure",
+      "raw_output": "{\n  \"incident_category\": \"Kubernetes / Container Orchestration\",\n  \"severity_level\": \"Critical\",\n  \"root_cause_analysis\": \"Root cause identified as 'pod_network_delay' in component 'app/redis-cart'. Classified under Performance_Fault within Kubernetes namespace 'boutique'. The diagnostic telemetry c..."
+    },
+    {
+      "test_index": 119,
+      "test_id": "boutique/admission/22",
+      "original_completion_tokens": 384,
+      "diagnostic_completion_tokens": 430,
+      "hit_max_tokens_768": false,
+      "json_valid": true,
+      "parse_error": "",
+      "schema_compliant": true,
+      "predicted_category": "Kubernetes / Container Orchestration",
+      "ground_truth_category": "Kubernetes / Container Orchestration",
+      "raw_output": "{\n  \"incident_category\": \"Kubernetes / Container Orchestration\",\n  \"severity_level\": \"Critical\",\n  \"root_cause_analysis\": \"Root cause identified as 'memory_quota_exceeded' in component 'app/adservice'. Classified under Runtime_Fault within Kubernetes namespace 'boutique'. The diagnostic telemetry co..."
+    },
+    {
+      "test_index": 121,
+      "test_id": "boutique/admission/24",
+      "original_completion_tokens": 384,
+      "diagnostic_completion_tokens": 562,
+      "hit_max_tokens_768": false,
+      "json_valid": true,
+      "parse_error": "",
+      "schema_compliant": true,
+      "predicted_category": "Kubernetes / Container Orchestration",
+      "ground_truth_category": "Kubernetes / Container Orchestration",
+      "raw_output": "{\n  \"incident_category\": \"Kubernetes / Container Orchestration\",\n  \"severity_level\": \"Critical\",\n  \"root_cause_analysis\": \"Root cause identified as 'pod_cpu_capacity_mismatch' in component 'app/checkoutservice'. Classified under Scheduler_Fault within Kubernetes namespace 'boutique'. The diagnostic ..."
+    },
+    {
+      "test_index": 122,
+      "test_id": "boutique/admission/25",
+      "original_completion_tokens": 384,
+      "diagnostic_completion_tokens": 562,
+      "hit_max_tokens_768": false,
+      "json_valid": true,
+      "parse_error": "",
+      "schema_compliant": true,
+      "predicted_category": "Kubernetes / Container Orchestration",
+      "ground_truth_category": "Kubernetes / Container Orchestration",
+      "raw_output": "{\n  \"incident_category\": \"Kubernetes / Container Orchestration\",\n  \"severity_level\": \"Critical\",\n  \"root_cause_analysis\": \"Root cause identified as 'missing_service_account' in component 'app/currencyservice'. Classified under Startup_Fault within Kubernetes namespace 'boutique'. The diagnostic tele..."
+    },
+    {
+      "test_index": 126,
+      "test_id": "boutique/admission/29",
+      "original_completion_tokens": 384,
+      "diagnostic_completion_tokens": 562,
+      "hit_max_tokens_768": false,
+      "json_valid": true,
+      "parse_error": "",
+      "schema_compliant": true,
+      "predicted_category": "Kubernetes / Container Orchestration",
+      "ground_truth_category": "Kubernetes / Container Orchestration",
+      "raw_output": "{\n  \"incident_category\": \"Kubernetes / Container Orchestration\",\n  \"severity_level\": \"Medium\",\n  \"root_cause_analysis\": \"Root cause identified as 'pod_cpu_capacity_mismatch' in component 'app/productcatalogservice'. Classified under Performance_Fault within Kubernetes namespace 'boutique'. The diagn..."
+    },
+    {
+      "test_index": 129,
+      "test_id": "boutique/admission/32",
+      "original_completion_tokens": 384,
+      "diagnostic_completion_tokens": 562,
+      "hit_max_tokens_768": false,
+      "json_valid": true,
+      "parse_error": "",
+      "schema_compliant": true,
+      "predicted_category": "Kubernetes / Container Orchestration",
+      "ground_truth_category": "Kubernetes / Container Orchestration",
+      "raw_output": "{\n  \"incident_category\": \"Kubernetes / Container Orchestration\",\n  \"severity_level\": \"Critical\",\n  \"root_cause_analysis\": \"Root cause identified as 'memory_request_quota_exceeded' in component 'app/shippingservice'. Classified under Resource_Fault within Kubernetes namespace 'boutique'. The diagnost..."
+    }
+  ]
+}

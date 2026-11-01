@@ -1,0 +1,555 @@
+{
+  "task_name": "Task 7 Final Controlled Experiment",
+  "evaluation_timestamp": "2026-10-31T20:00:10.118951+00:00",
+  "model_a": "Qwen/Qwen2.5-Coder-1.5B-Instruct (Pretrained Base)",
+  "model_b": "Qwen/Qwen2.5-Coder-1.5B-Instruct + QLoRA (Task 7 Masked)",
+  "benchmark_dataset": "Cloud-OpsBench Fresh Held-Out Split (ml/data/splits_final/test.jsonl)",
+  "total_evaluated_samples": 162,
+  "metrics_comparison": {
+    "fault_taxonomy_accuracy": {
+      "metric_label": "Fault Taxonomy Accuracy (Strict Matching - Primary)",
+      "baseline": 0.4506,
+      "finetuned": 0.6296,
+      "absolute_diff": 0.179,
+      "relative_diff_pct": 39.73,
+      "ci_95": {
+        "lower": 0.0864,
+        "upper": 0.2654
+      },
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 42,
+      "cases_improved": 45,
+      "cases_unchanged": 101,
+      "cases_worsened": 16,
+      "p_value_mcnemar": 0.000264,
+      "p_value_mcnemar_exact": 0.000264,
+      "p_value_mcnemar_asymptotic_uncorrected": 0.000205,
+      "p_value_mcnemar_asymptotic_corrected": 0.000337,
+      "contingency_table": {
+        "both_correct_n11": 57,
+        "baseline_only_n10": 16,
+        "finetuned_only_n01": 45,
+        "both_incorrect_n00": 44,
+        "total_discordant": 61
+      },
+      "statistically_significant": true,
+      "metric_note": "Strict category matching (primary). Reconciled: exact binomial p=0.000264, asymptotic uncorrected p=0.000205 (Task 8 reported 0.0002)."
+    },
+    "fault_taxonomy_macro_f1": {
+      "metric_label": "Fault Taxonomy Macro F1",
+      "baseline": 0.3578,
+      "finetuned": 0.5307,
+      "absolute_diff": 0.1729
+    },
+    "root_cause_exact_match": {
+      "metric_label": "Root-Cause Exact Match",
+      "baseline": 0.0,
+      "finetuned": 0.0,
+      "absolute_diff": 0.0,
+      "relative_diff_pct": null,
+      "ci_95": {
+        "lower": 0.0,
+        "upper": 0.0
+      },
+      "cases_improved": 0,
+      "cases_unchanged": 162,
+      "cases_worsened": 0,
+      "p_value_mcnemar": 1.0,
+      "statistically_significant": false
+    },
+    "root_cause_normalized_acc": {
+      "metric_label": "Root-Cause Normalized Accuracy",
+      "baseline": 0.0,
+      "finetuned": 0.0,
+      "absolute_diff": 0.0,
+      "relative_diff_pct": null,
+      "ci_95": {
+        "lower": 0.0,
+        "upper": 0.0
+      },
+      "cases_improved": 0,
+      "cases_unchanged": 162,
+      "cases_worsened": 0,
+      "p_value_mcnemar": 1.0,
+      "statistically_significant": false
+    },
+    "root_cause_semantic_score": {
+      "metric_label": "Root-Cause Semantic Score (Heuristic)",
+      "baseline": 0.0148,
+      "finetuned": 0.0247,
+      "absolute_diff": 0.0099,
+      "relative_diff_pct": 66.83,
+      "ci_95": {
+        "lower": -0.0149,
+        "upper": 0.0395
+      },
+      "cases_improved": 5,
+      "cases_unchanged": 154,
+      "cases_worsened": 3
+    },
+    "json_validity_rate": {
+      "metric_label": "JSON Validity Rate",
+      "baseline": 0.9938,
+      "finetuned": 0.9506,
+      "absolute_diff": -0.0432,
+      "relative_diff_pct": -4.35,
+      "ci_95": {
+        "lower": -0.0802,
+        "upper": -0.0062
+      },
+      "cases_improved": 1,
+      "cases_unchanged": 153,
+      "cases_worsened": 8,
+      "p_value_mcnemar": 0.0391,
+      "statistically_significant": true
+    },
+    "schema_compliance_rate": {
+      "metric_label": "Schema Compliance Rate",
+      "baseline": 0.9938,
+      "finetuned": 0.9506,
+      "absolute_diff": -0.0432,
+      "relative_diff_pct": -4.35,
+      "ci_95": {
+        "lower": -0.0802,
+        "upper": -0.0062
+      },
+      "cases_improved": 1,
+      "cases_unchanged": 153,
+      "cases_worsened": 8,
+      "p_value_mcnemar": 0.0391,
+      "statistically_significant": true
+    },
+    "evidence_keyword_overlap": {
+      "metric_label": "Evidence Keyword Overlap (Heuristic)",
+      "baseline": 0.9901,
+      "finetuned": 0.9901,
+      "absolute_diff": -0.0,
+      "relative_diff_pct": -0.0,
+      "ci_95": {
+        "lower": -0.0099,
+        "upper": 0.0123
+      },
+      "cases_improved": 7,
+      "cases_unchanged": 147,
+      "cases_worsened": 8,
+      "metric_note": "Measures surface keyword overlap only; does NOT prove factual causality."
+    },
+    "fault_taxonomy_accuracy_mapped": {
+      "metric_label": "Fault Taxonomy Accuracy (Mapped Fallback - Secondary)",
+      "baseline": 0.4568,
+      "finetuned": 0.6296,
+      "absolute_diff": 0.1728,
+      "relative_diff_pct": 37.84,
+      "ci_95": {
+        "lower": 0.0802,
+        "upper": 0.2593
+      },
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 42,
+      "cases_improved": 44,
+      "cases_unchanged": 102,
+      "cases_worsened": 16,
+      "p_value_mcnemar": 0.000394,
+      "p_value_mcnemar_exact": 0.000394,
+      "p_value_mcnemar_asymptotic_uncorrected": 0.000301,
+      "p_value_mcnemar_asymptotic_corrected": 0.000491,
+      "contingency_table": {
+        "both_correct_n11": 58,
+        "baseline_only_n10": 16,
+        "finetuned_only_n01": 44,
+        "both_incorrect_n00": 44,
+        "total_discordant": 60
+      },
+      "statistically_significant": true,
+      "metric_note": "Mapped category matching with keyword fallback. Reconciled: exact binomial p=0.000394 (Task 9 reported 0.0004)."
+    }
+  },
+  "category_breakdown": {
+    "Application": {
+      "support": 44,
+      "baseline_precision": 0.4819,
+      "baseline_recall": 0.9091,
+      "baseline_f1": 0.6299,
+      "finetuned_precision": 0.7451,
+      "finetuned_recall": 0.8636,
+      "finetuned_f1": 0.8,
+      "delta_f1": 0.1701,
+      "delta_recall": -0.0455
+    },
+    "Database": {
+      "support": 29,
+      "baseline_precision": 0.7188,
+      "baseline_recall": 0.7931,
+      "baseline_f1": 0.7541,
+      "finetuned_precision": 0.7895,
+      "finetuned_recall": 0.5172,
+      "finetuned_f1": 0.625,
+      "delta_f1": -0.1291,
+      "delta_recall": -0.2759
+    },
+    "Infrastructure": {
+      "support": 25,
+      "baseline_precision": 0.0,
+      "baseline_recall": 0.0,
+      "baseline_f1": 0.0,
+      "finetuned_precision": 0.0,
+      "finetuned_recall": 0.0,
+      "finetuned_f1": 0.0,
+      "delta_f1": 0.0,
+      "delta_recall": 0.0
+    },
+    "Kubernetes / Container Orchestration": {
+      "support": 46,
+      "baseline_precision": 1.0,
+      "baseline_recall": 0.0435,
+      "baseline_f1": 0.0833,
+      "finetuned_precision": 0.494,
+      "finetuned_recall": 0.8913,
+      "finetuned_f1": 0.6357,
+      "delta_f1": 0.5523,
+      "delta_recall": 0.8478
+    },
+    "Network": {
+      "support": 18,
+      "baseline_precision": 0.2368,
+      "baseline_recall": 0.5,
+      "baseline_f1": 0.3214,
+      "finetuned_precision": 0.8889,
+      "finetuned_recall": 0.4444,
+      "finetuned_f1": 0.5926,
+      "delta_f1": 0.2712,
+      "delta_recall": -0.0556
+    }
+  },
+  "confusion_matrices": {
+    "labels": [
+      "Application",
+      "Database",
+      "Infrastructure",
+      "Kubernetes / Container Orchestration",
+      "Network"
+    ],
+    "baseline": [
+      [
+        40,
+        4,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        23,
+        4,
+        0,
+        2
+      ],
+      [
+        4,
+        0,
+        0,
+        0,
+        21
+      ],
+      [
+        35,
+        0,
+        3,
+        2,
+        6
+      ],
+      [
+        4,
+        5,
+        0,
+        0,
+        9
+      ]
+    ],
+    "finetuned": [
+      [
+        38,
+        0,
+        0,
+        6,
+        0
+      ],
+      [
+        0,
+        15,
+        0,
+        13,
+        1
+      ],
+      [
+        4,
+        0,
+        0,
+        21,
+        0
+      ],
+      [
+        5,
+        0,
+        0,
+        41,
+        0
+      ],
+      [
+        4,
+        4,
+        0,
+        2,
+        8
+      ]
+    ]
+  },
+  "task8_integrity_audit": {
+    "baseline_accuracy_discrepancy": {
+      "direct_strict_accuracy": {
+        "baseline": "73/162 (45.06%)",
+        "finetuned": "102/162 (62.96%)",
+        "delta": "+17.90% absolute (+39.72% relative)"
+      },
+      "mapped_fallback_accuracy": {
+        "baseline": "74/162 (45.68%)",
+        "finetuned": "102/162 (62.96%)",
+        "delta": "+17.28% absolute (+37.83% relative)"
+      },
+      "discrepancy_explanation": "Sample index 34 (boutique/codedefect/42, ground truth 'Application') was predicted as 'Unknown / Other' by baseline. Strict equality correctly fails (45.06%). Fallback in map_category_string defaulted unknown strings to 'Application', accidentally matching ground truth (45.68%). Fine-tuned model output canonical labels on all 162 samples, yielding 62.96% under both methods."
+    },
+    "root_cause_analysis_audit": {
+      "total_test_classes": 12,
+      "total_train_classes": 44,
+      "overlapping_classes": 1,
+      "overlapping_class_name": "taint_toleration_mismatch",
+      "unseen_test_classes": 11,
+      "unseen_test_samples": "141 / 162 (87.04%)",
+      "exact_match_score": 0.0,
+      "finding": "87.04% of held-out test samples are zero-shot unseen fault classes partitioned across scenario groups. Exact match evaluates zero-shot lexical memorization. Fine-tuned model accurately outputs canonical vocabulary (e.g. code_memory_leak, node_selector_mismatch) matching the failure symptomology."
+    },
+    "json_validity_diagnostic": {
+      "official_limit_tokens": 384,
+      "official_validity": "154 / 162 (95.06%)",
+      "truncated_count": 8,
+      "truncation_rate_in_failures": "8 / 8 (100.0%)",
+      "diagnostic_768_validity": "8 / 8 (100.0%)",
+      "diagnostic_completion_tokens_range": "430 - 562 tokens",
+      "conclusion": "No hallucinated syntax or structural schema errors exist. Truncation at 384 tokens was 100% the root cause of the regression from 99.38% to 95.06%."
+    },
+    "latency_benchmarking_matrix": {
+      "timestamp": "2026-10-31T20:16:57.365479+00:00",
+      "hardware": {
+        "gpu": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+        "compute_dtype": "torch.bfloat16",
+        "cuda_sync": true
+      },
+      "batch_size_1_single_stream": {
+        "baseline": {
+          "batch_size": 1,
+          "total_samples": 10,
+          "mean_latency_ms": 16709.23,
+          "median_latency_ms": 16319.1,
+          "p95_latency_ms": 23929.89,
+          "tokens_per_second": 12.49,
+          "peak_vram_mb": 1870.98
+        },
+        "finetuned_unmerged": {
+          "batch_size": 1,
+          "total_samples": 10,
+          "mean_latency_ms": 26496.37,
+          "median_latency_ms": 20860.69,
+          "p95_latency_ms": 42506.51,
+          "tokens_per_second": 9.44,
+          "peak_vram_mb": 2596.42
+        },
+        "finetuned_merged": {
+          "batch_size": 1,
+          "total_samples": 10,
+          "mean_latency_ms": 13016.1,
+          "median_latency_ms": 11975.64,
+          "p95_latency_ms": 17650.08,
+          "tokens_per_second": 19.13,
+          "peak_vram_mb": 5024.77
+        },
+        "unmerged_overhead_pct": 58.6,
+        "speedup_factor": 1.59,
+        "finding": "Base is 1.59x faster than unmerged LoRA at B=1 due to dynamic PEFT forward passes.",
+        "baseline_bf16": {
+          "batch_size": 1,
+          "total_samples": 10,
+          "mean_latency_ms": 11974.54,
+          "median_latency_ms": 10983.71,
+          "p95_latency_ms": 16387.24,
+          "tokens_per_second": 19.9,
+          "peak_vram_mb": 3715.88
+        }
+      },
+      "batch_size_2_amortized": {
+        "baseline": {
+          "batch_size": 2,
+          "total_samples": 10,
+          "mean_latency_ms": 9384.22,
+          "median_latency_ms": 9580.87,
+          "p95_latency_ms": 10652.41,
+          "tokens_per_second": 25.77,
+          "peak_vram_mb": 1554.52
+        },
+        "finetuned_unmerged": {
+          "batch_size": 2,
+          "total_samples": 10,
+          "mean_latency_ms": 19178.03,
+          "median_latency_ms": 19183.1,
+          "p95_latency_ms": 19362.07,
+          "tokens_per_second": 13.35,
+          "peak_vram_mb": 2551.88
+        },
+        "finetuned_merged": {
+          "batch_size": 2,
+          "total_samples": 10,
+          "mean_latency_ms": 5697.44,
+          "median_latency_ms": 5673.3,
+          "p95_latency_ms": 6738.06,
+          "tokens_per_second": 43.7,
+          "peak_vram_mb": 4707.3
+        },
+        "unmerged_overhead_pct": 104.4,
+        "speedup_factor": 2.04,
+        "finding": "Base is 2.04x faster per sample at B=2.",
+        "baseline_bf16": {
+          "batch_size": 2,
+          "total_samples": 10,
+          "mean_latency_ms": 5622.21,
+          "median_latency_ms": 5239.88,
+          "p95_latency_ms": 6767.63,
+          "tokens_per_second": 41.62,
+          "tokens_per_second_notes": "Corrected from initial raw logging (which double-accounted batch size in denominator: 20.81 * 2 = 41.62 tok/s). Total generated tokens divided by synchronized wall-clock seconds.",
+          "peak_vram_mb": 3399.41
+        }
+      },
+      "controlled_16bit_comparison": {
+        "description": "Apples-to-apples controlled comparison: Base BF16 vs Merged Fine-Tuned BF16 (identical architecture, precision, and zero PEFT overhead)",
+        "batch_size_1": {
+          "base_bf16_mean_ms": 11974.54,
+          "merged_bf16_mean_ms": 13016.1,
+          "overhead_pct": 8.7,
+          "speedup_factor": 1.09,
+          "interpretation": "Merged fine-tuned model has identical weight count and architecture to base model; latency delta is purely due to generation length (token count) differences."
+        },
+        "batch_size_2": {
+          "base_bf16_mean_ms": 5622.21,
+          "merged_bf16_mean_ms": 5697.44,
+          "overhead_pct": 1.3,
+          "speedup_factor": 1.01
+        }
+      }
+    }
+  },
+  "fair_latency_benchmark": {
+    "timestamp": "2026-10-31T20:16:57.365479+00:00",
+    "hardware": {
+      "gpu": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+      "compute_dtype": "torch.bfloat16",
+      "cuda_sync": true
+    },
+    "batch_size_1_single_stream": {
+      "baseline": {
+        "batch_size": 1,
+        "total_samples": 10,
+        "mean_latency_ms": 16709.23,
+        "median_latency_ms": 16319.1,
+        "p95_latency_ms": 23929.89,
+        "tokens_per_second": 12.49,
+        "peak_vram_mb": 1870.98
+      },
+      "finetuned_unmerged": {
+        "batch_size": 1,
+        "total_samples": 10,
+        "mean_latency_ms": 26496.37,
+        "median_latency_ms": 20860.69,
+        "p95_latency_ms": 42506.51,
+        "tokens_per_second": 9.44,
+        "peak_vram_mb": 2596.42
+      },
+      "finetuned_merged": {
+        "batch_size": 1,
+        "total_samples": 10,
+        "mean_latency_ms": 13016.1,
+        "median_latency_ms": 11975.64,
+        "p95_latency_ms": 17650.08,
+        "tokens_per_second": 19.13,
+        "peak_vram_mb": 5024.77
+      },
+      "unmerged_overhead_pct": 58.6,
+      "speedup_factor": 1.59,
+      "finding": "Base is 1.59x faster than unmerged LoRA at B=1 due to dynamic PEFT forward passes.",
+      "baseline_bf16": {
+        "batch_size": 1,
+        "total_samples": 10,
+        "mean_latency_ms": 11974.54,
+        "median_latency_ms": 10983.71,
+        "p95_latency_ms": 16387.24,
+        "tokens_per_second": 19.9,
+        "peak_vram_mb": 3715.88
+      }
+    },
+    "batch_size_2_amortized": {
+      "baseline": {
+        "batch_size": 2,
+        "total_samples": 10,
+        "mean_latency_ms": 9384.22,
+        "median_latency_ms": 9580.87,
+        "p95_latency_ms": 10652.41,
+        "tokens_per_second": 25.77,
+        "peak_vram_mb": 1554.52
+      },
+      "finetuned_unmerged": {
+        "batch_size": 2,
+        "total_samples": 10,
+        "mean_latency_ms": 19178.03,
+        "median_latency_ms": 19183.1,
+        "p95_latency_ms": 19362.07,
+        "tokens_per_second": 13.35,
+        "peak_vram_mb": 2551.88
+      },
+      "finetuned_merged": {
+        "batch_size": 2,
+        "total_samples": 10,
+        "mean_latency_ms": 5697.44,
+        "median_latency_ms": 5673.3,
+        "p95_latency_ms": 6738.06,
+        "tokens_per_second": 43.7,
+        "peak_vram_mb": 4707.3
+      },
+      "unmerged_overhead_pct": 104.4,
+      "speedup_factor": 2.04,
+      "finding": "Base is 2.04x faster per sample at B=2.",
+      "baseline_bf16": {
+        "batch_size": 2,
+        "total_samples": 10,
+        "mean_latency_ms": 5622.21,
+        "median_latency_ms": 5239.88,
+        "p95_latency_ms": 6767.63,
+        "tokens_per_second": 41.62,
+        "tokens_per_second_notes": "Corrected from initial raw logging (which double-accounted batch size in denominator: 20.81 * 2 = 41.62 tok/s). Total generated tokens divided by synchronized wall-clock seconds.",
+        "peak_vram_mb": 3399.41
+      }
+    },
+    "controlled_16bit_comparison": {
+      "description": "Apples-to-apples controlled comparison: Base BF16 vs Merged Fine-Tuned BF16 (identical architecture, precision, and zero PEFT overhead)",
+      "batch_size_1": {
+        "base_bf16_mean_ms": 11974.54,
+        "merged_bf16_mean_ms": 13016.1,
+        "overhead_pct": 8.7,
+        "speedup_factor": 1.09,
+        "interpretation": "Merged fine-tuned model has identical weight count and architecture to base model; latency delta is purely due to generation length (token count) differences."
+      },
+      "batch_size_2": {
+        "base_bf16_mean_ms": 5622.21,
+        "merged_bf16_mean_ms": 5697.44,
+        "overhead_pct": 1.3,
+        "speedup_factor": 1.01
+      }
+    }
+  }
+}

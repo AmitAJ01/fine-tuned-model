@@ -1,0 +1,107 @@
+{
+  "timestamp": "2026-10-31T20:16:57.365479+00:00",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+    "compute_dtype": "torch.bfloat16",
+    "cuda_sync": true
+  },
+  "batch_size_1_single_stream": {
+    "baseline": {
+      "batch_size": 1,
+      "total_samples": 10,
+      "mean_latency_ms": 16709.23,
+      "median_latency_ms": 16319.1,
+      "p95_latency_ms": 23929.89,
+      "tokens_per_second": 12.49,
+      "peak_vram_mb": 1870.98
+    },
+    "finetuned_unmerged": {
+      "batch_size": 1,
+      "total_samples": 10,
+      "mean_latency_ms": 26496.37,
+      "median_latency_ms": 20860.69,
+      "p95_latency_ms": 42506.51,
+      "tokens_per_second": 9.44,
+      "peak_vram_mb": 2596.42
+    },
+    "finetuned_merged": {
+      "batch_size": 1,
+      "total_samples": 10,
+      "mean_latency_ms": 13016.1,
+      "median_latency_ms": 11975.64,
+      "p95_latency_ms": 17650.08,
+      "tokens_per_second": 19.13,
+      "peak_vram_mb": 5024.77
+    },
+    "unmerged_overhead_pct": 58.6,
+    "speedup_factor": 1.59,
+    "finding": "Base is 1.59x faster than unmerged LoRA at B=1 due to dynamic PEFT forward passes.",
+    "baseline_bf16": {
+      "batch_size": 1,
+      "total_samples": 10,
+      "mean_latency_ms": 11974.54,
+      "median_latency_ms": 10983.71,
+      "p95_latency_ms": 16387.24,
+      "tokens_per_second": 19.9,
+      "peak_vram_mb": 3715.88
+    }
+  },
+  "batch_size_2_amortized": {
+    "baseline": {
+      "batch_size": 2,
+      "total_samples": 10,
+      "mean_latency_ms": 9384.22,
+      "median_latency_ms": 9580.87,
+      "p95_latency_ms": 10652.41,
+      "tokens_per_second": 25.77,
+      "peak_vram_mb": 1554.52
+    },
+    "finetuned_unmerged": {
+      "batch_size": 2,
+      "total_samples": 10,
+      "mean_latency_ms": 19178.03,
+      "median_latency_ms": 19183.1,
+      "p95_latency_ms": 19362.07,
+      "tokens_per_second": 13.35,
+      "peak_vram_mb": 2551.88
+    },
+    "finetuned_merged": {
+      "batch_size": 2,
+      "total_samples": 10,
+      "mean_latency_ms": 5697.44,
+      "median_latency_ms": 5673.3,
+      "p95_latency_ms": 6738.06,
+      "tokens_per_second": 43.7,
+      "peak_vram_mb": 4707.3
+    },
+    "unmerged_overhead_pct": 104.4,
+    "speedup_factor": 2.04,
+    "finding": "Base is 2.04x faster per sample at B=2.",
+    "baseline_bf16": {
+      "batch_size": 2,
+      "total_samples": 10,
+      "mean_latency_ms": 5622.21,
+      "median_latency_ms": 5239.88,
+      "p95_latency_ms": 6767.63,
+      "tokens_per_second": 41.62,
+      "tokens_per_second_notes": "Corrected from initial raw logging (which double-accounted batch size in denominator: 20.81 * 2 = 41.62 tok/s). Total generated tokens divided by synchronized wall-clock seconds.",
+      "peak_vram_mb": 3399.41
+    }
+  },
+  "controlled_16bit_comparison": {
+    "description": "Apples-to-apples controlled comparison: Base BF16 vs Merged Fine-Tuned BF16 (identical architecture, precision, and zero PEFT overhead)",
+    "batch_size_1": {
+      "base_bf16_mean_ms": 11974.54,
+      "merged_bf16_mean_ms": 13016.1,
+      "overhead_pct": 8.7,
+      "speedup_factor": 1.09,
+      "interpretation": "Merged fine-tuned model has identical weight count and architecture to base model; latency delta is purely due to generation length (token count) differences."
+    },
+    "batch_size_2": {
+      "base_bf16_mean_ms": 5622.21,
+      "merged_bf16_mean_ms": 5697.44,
+      "overhead_pct": 1.3,
+      "speedup_factor": 1.01
+    }
+  }
+}

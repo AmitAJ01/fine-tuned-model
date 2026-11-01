@@ -1,0 +1,203 @@
+{
+  "model_a": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "model_b": "Qwen/Qwen2.5-Coder-1.5B-Instruct + QLoRA",
+  "benchmark_dataset": "Cloud-OpsBench (148 held-out test cases)",
+  "audit_version": "2.0.0-audited",
+  "evaluation_timestamp": "2026-10-31T17:30:44.748266+00:00",
+  "metrics_comparison": {
+    "category_accuracy": {
+      "metric_label": "Fault Taxonomy Accuracy",
+      "baseline": 0.3311,
+      "finetuned": 0.3311,
+      "absolute_diff": 0.0,
+      "relative_diff_pct": 0.0,
+      "ci_95": {
+        "lower": -0.027,
+        "upper": 0.027
+      },
+      "p_value_mcnemar": 1.0,
+      "statistically_significant": false,
+      "cases_improved": 2,
+      "cases_unchanged": 144,
+      "cases_worsened": 2
+    },
+    "root_cause_exact_match": {
+      "metric_label": "Root-Cause Exact Match",
+      "baseline": 0.0,
+      "finetuned": 0.0,
+      "absolute_diff": 0.0,
+      "relative_diff_pct": null,
+      "ci_95": {
+        "lower": 0.0,
+        "upper": 0.0
+      },
+      "p_value_mcnemar": 1.0,
+      "statistically_significant": false,
+      "cases_improved": 0,
+      "cases_unchanged": 148,
+      "cases_worsened": 0
+    },
+    "root_cause_normalized_acc": {
+      "metric_label": "Root-Cause Normalized Accuracy",
+      "baseline": 0.0,
+      "finetuned": 0.0,
+      "absolute_diff": 0.0,
+      "relative_diff_pct": null,
+      "ci_95": {
+        "lower": 0.0,
+        "upper": 0.0
+      },
+      "p_value_mcnemar": 1.0,
+      "statistically_significant": false,
+      "cases_improved": 0,
+      "cases_unchanged": 148,
+      "cases_worsened": 0
+    },
+    "root_cause_semantic_score": {
+      "metric_label": "Root-Cause Semantic Score (Heuristic)",
+      "baseline": 0.0,
+      "finetuned": 0.0,
+      "absolute_diff": 0.0,
+      "relative_diff_pct": null,
+      "ci_95": {
+        "lower": 0.0,
+        "upper": 0.0
+      },
+      "p_value_mcnemar": 1.0,
+      "statistically_significant": false,
+      "cases_improved": 0,
+      "cases_unchanged": 148,
+      "cases_worsened": 0
+    },
+    "json_validity_rate": {
+      "metric_label": "JSON Validity Rate",
+      "baseline": 0.9865,
+      "finetuned": 1.0,
+      "absolute_diff": 0.0135,
+      "relative_diff_pct": 1.37,
+      "ci_95": {
+        "lower": 0.0,
+        "upper": 0.0338
+      },
+      "p_value_mcnemar": 0.5,
+      "statistically_significant": false,
+      "cases_improved": 2,
+      "cases_unchanged": 146,
+      "cases_worsened": 0
+    },
+    "schema_compliance_rate": {
+      "metric_label": "Schema Compliance Rate",
+      "baseline": 0.9865,
+      "finetuned": 1.0,
+      "absolute_diff": 0.0135,
+      "relative_diff_pct": 1.37,
+      "ci_95": {
+        "lower": 0.0,
+        "upper": 0.0338
+      },
+      "p_value_mcnemar": 0.5,
+      "statistically_significant": false,
+      "cases_improved": 2,
+      "cases_unchanged": 146,
+      "cases_worsened": 0
+    },
+    "mean_grounding_score": {
+      "metric_label": "Evidence Keyword Overlap (Heuristic)",
+      "baseline": 0.9959,
+      "finetuned": 0.9986,
+      "absolute_diff": 0.0027,
+      "relative_diff_pct": 0.27,
+      "ci_95": {
+        "lower": 0.0,
+        "upper": 0.0068
+      },
+      "p_value_mcnemar": 0.5,
+      "statistically_significant": false,
+      "cases_improved": 2,
+      "cases_unchanged": 146,
+      "cases_worsened": 0,
+      "metric_note": "Measures surface keyword overlap only; does NOT prove factual correctness or lack of hallucination."
+    },
+    "category_macro_f1": {
+      "metric_label": "Fault Taxonomy Macro F1",
+      "baseline": 0.3279,
+      "finetuned": 0.3303,
+      "absolute_diff": 0.0024
+    },
+    "root_cause_macro_f1": {
+      "metric_label": "Root-Cause Macro F1",
+      "baseline": 0.0,
+      "finetuned": 0.0,
+      "absolute_diff": 0.0
+    }
+  },
+  "fair_latency_benchmark": {
+    "audit_status": "Audited under strictly controlled conditions with torch.cuda.synchronize()",
+    "batch_size_1_single_stream": {
+      "baseline_mean_ms": 14888.6,
+      "baseline_tokens_per_sec": 14.49,
+      "finetuned_mean_ms": 33154.79,
+      "finetuned_tokens_per_sec": 7.18,
+      "unmerged_lora_overhead_pct": 122.7,
+      "finding": "Baseline base model is ~2.2x faster per sample at batch_size=1 due to unmerged LoRA matrix multiplication overhead."
+    },
+    "batch_size_2_amortized": {
+      "baseline_mean_ms": 7332.53,
+      "baseline_tokens_per_sec": 31.95,
+      "finetuned_mean_ms": 13828.09,
+      "finetuned_tokens_per_sec": 18.58,
+      "unmerged_lora_overhead_pct": 88.6,
+      "finding": "Baseline base model is ~1.9x faster per sample at batch_size=2. The previous 2x speedup claim was an invalid comparison of B=2 vs B=1 and is retracted."
+    }
+  },
+  "category_breakdown": {
+    "application": {
+      "support": 22,
+      "baseline_f1": 0.3478,
+      "finetuned_f1": 0.336,
+      "delta_f1": -0.0118,
+      "baseline_recall": 0.9091,
+      "finetuned_recall": 0.9545,
+      "delta_recall": 0.0454
+    },
+    "database": {
+      "support": 25,
+      "baseline_f1": 0.9583,
+      "finetuned_f1": 0.9583,
+      "delta_f1": 0.0,
+      "baseline_recall": 0.92,
+      "finetuned_recall": 0.92,
+      "delta_recall": 0.0
+    },
+    "infrastructure": {
+      "support": 47,
+      "baseline_f1": 0.0,
+      "finetuned_f1": 0.0,
+      "delta_f1": 0.0,
+      "baseline_recall": 0.0,
+      "finetuned_recall": 0.0,
+      "delta_recall": 0.0,
+      "audit_note": "All 47 cases were 'pod_network_delay'; models misclassified them as 'Application' or 'Network'."
+    },
+    "kubernetes container orchestration": {
+      "support": 47,
+      "baseline_f1": 0.0,
+      "finetuned_f1": 0.0,
+      "delta_f1": 0.0,
+      "baseline_recall": 0.0,
+      "finetuned_recall": 0.0,
+      "delta_recall": 0.0,
+      "audit_note": "All 47 cases were 'incorrect_image_reference' or 'node_affinity_mismatch'; models misclassified 100% of them as 'Application'."
+    },
+    "network": {
+      "support": 7,
+      "baseline_f1": 0.3333,
+      "finetuned_f1": 0.3571,
+      "delta_f1": 0.0238,
+      "baseline_recall": 0.8571,
+      "finetuned_recall": 0.7143,
+      "delta_recall": -0.1428
+    }
+  },
+  "total_evaluated_samples": 148
+}
