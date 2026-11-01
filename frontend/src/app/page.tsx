@@ -135,6 +135,8 @@ const PRESET_SCENARIOS = [
   },
 ];
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"diagnose" | "benchmark" | "charts" | "cases" | "training">("benchmark");
   const [logText, setLogText] = useState(PRESET_SCENARIOS[0].logs);
@@ -154,7 +156,7 @@ export default function Home() {
     setBenchLoading(true);
     try {
       // 1. Try fetching from live FastAPI backend
-      const res = await fetch("http://localhost:8000/api/v1/evaluation/comparison");
+      const res = await fetch(`${API_BASE_URL}/api/v1/evaluation/comparison`);
       if (res.ok) {
         const data = await res.json();
         setBenchmarkData(data);
@@ -182,7 +184,7 @@ export default function Home() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("http://localhost:8000/api/v1/incident/diagnose", {
+      const res = await fetch(`${API_BASE_URL}/api/v1/incident/diagnose`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -1095,9 +1097,6 @@ export default function Home() {
           </div>
         </div>
       )}
-          </div>
-        </div>
-      )}
 
       {/* TAB 5: TRAINING TRAJECTORY */}
       {activeTab === "training" && (
@@ -1111,17 +1110,25 @@ export default function Home() {
 
             <div className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800 space-y-2">
               <span className="text-xs text-slate-500 block">Peak GPU Memory (VRAM)</span>
-              <span className="text-2xl font-extrabold text-white font-mono">3,946 MB</span>
-              <span className="text-xs text-emerald-400 block font-semibold">3.85 GB out of 6.0 GB physical VRAM</span>
+              <span className="text-2xl font-extrabold text-white font-mono">
+                {train?.hardware_and_efficiency?.peak_vram_mb
+                  ? `${train.hardware_and_efficiency.peak_vram_mb.toLocaleString()} MB`
+                  : "4,583 MB"}
+              </span>
+              <span className="text-xs text-emerald-400 block font-semibold">4.48 GB (74.6% of 6.0 GB physical VRAM)</span>
             </div>
 
             <div className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800 space-y-2">
               <span className="text-xs text-slate-500 block">Final Loss Trajectory</span>
               <div className="flex items-baseline space-x-2">
-                <span className="text-2xl font-extrabold text-emerald-400 font-mono">1.467</span>
+                <span className="text-2xl font-extrabold text-emerald-400 font-mono">
+                  {train?.training_trajectory?.final_val_loss?.toFixed(4) || "0.0894"}
+                </span>
                 <span className="text-xs text-slate-400 font-mono">Val Loss</span>
               </div>
-              <span className="text-xs text-slate-400 block">Train loss: 1.520 (Healthy generalization)</span>
+              <span className="text-xs text-slate-400 block">
+                Train loss: {train?.training_trajectory?.final_train_loss?.toFixed(4) || "0.0624"} (Step 33 convergence)
+              </span>
             </div>
           </div>
 
